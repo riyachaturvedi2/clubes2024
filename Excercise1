@@ -1,0 +1,40 @@
+## Data Excercise: Green House Gas Emissions & Income 
+In this excercise we will explore the relationship between a country' income level and GHG emissions by creating a bar graph, through this we will test the Kuznet Curve
+theory that we studied in class. 
+
+Step 1. Loading packages and files
+
+```{r}
+library(tidyverse)   ##to be run each time you expect to use tidyverse
+ghg_income <- read.csv("C:/Users/Riya/Desktop/iNPER Mexico Internship/GHG_Income_Data.csv")
+```
+
+Our dataset has several missing values- how do we deal with this? 
+
+Step 2. Methods of removing NA values
+```{r}
+## Here, we are removing all NA values from the relevant only using Base R
+mean(ghg_income$Total_GHG, na.rm = TRUE)
+
+ghg_income1 <- na.omit(ghg_income)  ## through this, we can remove all NA values from the entire dataset
+
+## Bonus: Creating a subset in Base R 
+middle_income <- ghg_income1[ghg_income1$WB_IncomeLevel == "Middle Income", ]
+
+# Creating a subset in Tidyverse & removing NA values
+middle_income <- ghg_income %>% 
+  filter(WB_IncomeLevel == "Middle Income" & !is.na(WB_IncomeLevel))
+
+
+Now that we have cleaned data, we can work on creating our plot
+
+```{r} 
+options(scipen = 999)   ##good to run this since GHG emissions data number are very large and R abbreviates them in exponential form 
+
+ggplot(ghg_income1, aes(x = Total_GHG, y = WB_IncomeLevel)) +
+  geom_line(size = 2, color = "pink") +                            ## yo can customise colors and palettes in this line
+  labs(title = "Green House Gas Emissions (tonnes) by Income Level",
+       x = "GHGs (tonnes)",
+       y = "World Bank Income Level") +
+  theme_minimal()                         ## R will clean up formatting and keep the aesthetic minimalist when we use this                  
+```
